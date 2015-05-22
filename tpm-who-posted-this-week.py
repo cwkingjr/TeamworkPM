@@ -14,6 +14,7 @@
 
 import base64
 from datetime import datetime, date, timedelta
+from dateutil import tz
 import json
 import os
 import sys
@@ -32,6 +33,10 @@ if __name__ == "__main__":
     subdomain = os.environ['TEAMWORKPM_SUBDOMAIN'] 
     key = os.environ['TEAMWORKPM_API_KEY'] 
 
+    # set up zones for datetime conversions
+    from_zone = tz.gettz('UTC')
+    to_zone = tz.tzlocal() 
+
     # Verify URL via browser
     status_url = "https://%s.teamworkpm.net/people/status.json" % subdomain
 
@@ -48,7 +53,7 @@ if __name__ == "__main__":
     week = "%2s" % week # ensure two digit week
     day  = today.isocalendar()[DAY] 
 
-    print "Using this info to make posting/filemane decisions"
+    print "Using this info to make posting/filename decisions"
     print "Last Monday (4 days ago): %s" % monday
     print "Last Thursday (1 day ago): %s" % thursday
     print "Current year: %s" % year
@@ -77,6 +82,10 @@ if __name__ == "__main__":
         last_updated_str = person['last-changed-on']
         # convert date string to datetime object
         last_updated = datetime.strptime(last_updated_str, "%Y-%m-%dT%H:%M:%SZ")
+        # convert naive datetime to UTC timezone aware
+        last_updated = last_updated.replace(tzinfo=from_zone)
+        # convert UTC to local timezone
+        last_updated = last_updated.astimezone(to_zone)
         # get only date for comparison
         last_updated_day = last_updated.date()
 
