@@ -67,7 +67,11 @@ def main():
     logger.info("Using start of %s and end of %s" % (options.start, options.end))
 
     if options.output:
-        outfile = "output-status-stats-%s" % datetime.now().isoformat()
+        # get datetime, change colons and dots to dashes
+        mydt = datetime.now().isoformat()
+        mydt = mydt.replace(':','-')
+        mydt = mydt.replace('.','-')
+        outfile = "output-status-stats-%s.txt" % mydt
         o = open(outfile, 'w')
         logger.info("Writing results to %s" % outfile)
         o.write("# Using start of %s and end of %s\n" % (options.start, options.end))
