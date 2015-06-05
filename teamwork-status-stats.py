@@ -111,9 +111,9 @@ def main():
         # coerce python to create percentages with floats
         percentage = float(posts_in_window) / float(posts_count) * 100
 
-        logger.info("%s %s" % (name, percentage))
+        logger.info("%s %2.2f" % (name, percentage))
         if options.output:
-            o.write("%s %s\n" % (name, percentage))
+            o.write("%s %2.2f\n" % (name, percentage))
 
     # Aggregate stats
     agg_posts_count = 0
